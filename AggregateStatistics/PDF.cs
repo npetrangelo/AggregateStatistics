@@ -7,12 +7,12 @@ public class PDF {
     public PDF(double min, double max, double[] pdf) {
         _min = min;
         _max = max;
-        _pdf = pdf;
+        _pdf = pdf.Normalize(); // All PDFs must sum to 1
         _cdf = new double[pdf.Length];
 
         var sum = 0.0;
-        for (var i = 0; i < pdf.Length; i++) {
-            sum += pdf[i];
+        for (var i = 0; i < _pdf.Length; i++) {
+            sum += _pdf[i];
             _cdf[i] = sum;
         }
     }
