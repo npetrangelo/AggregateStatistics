@@ -2,7 +2,7 @@ namespace AggregateStatistics;
 
 public static class Utils {
     public static double Lerp(double a, double b, double n) {
-        return a*(n-1) + b*n;
+        return a*(1-n) + b*n;
     }
     
     public static double[] Normalize(this double[] v) {
