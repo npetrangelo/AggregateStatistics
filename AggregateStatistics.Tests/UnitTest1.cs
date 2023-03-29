@@ -7,6 +7,13 @@ public class Tests {
     }
 
     [Test]
+    public void TestPercentile() {
+        var pdf = new PDF(1, 3, new []{ 1.0, 1.0, 1.0 });
+        Console.WriteLine(pdf.ToString());
+        Console.WriteLine(pdf.Percentile(0.5));
+    }
+
+    [Test]
     public void TestConvolve() {
         double[] pdf = { 1, 1 };
         double[] expected = { 1, 2, 1 };

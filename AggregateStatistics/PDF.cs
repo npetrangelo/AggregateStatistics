@@ -21,20 +21,32 @@ public class PDF {
      * Finds sample by doing a binary search on the cdf
      */
     public double Sample() {
-        var sample = new Random().NextDouble();
+        return Percentile(new Random().NextDouble());
+    }
+
+    public double Percentile(double percent) {
         var index = _cdf.Length / 2;
         while (true) {
             if (index >= _cdf.Length) return _max;
             if (index <= 0) return _min;
-            if (sample >= _cdf[index] && sample < _cdf[index + 1]) {
-                return Utils.Lerp(_min, _max, (double) index/_cdf.Length);
+            if (percent > _cdf[index - 1] && percent <= _cdf[index]) {
+                Console.WriteLine($"index={index}");
+                return Utils.Lerp(_min, _max, (double) index/(_cdf.Length - 1));
             }
             
-            if (sample > _cdf[index + 1]) {
+            if (percent > _cdf[index]) {
                 index += index / 2;
             } else {
                 index /= 2;
             }
         }
+    }
+
+    public new string ToString() {
+        var values = new double[_pdf.Length];
+        for (var i = 0; i < values.Length; i++) {
+            values[i] = Utils.Lerp(_min, _max, (double) i/(values.Length - 1));
+        }
+        return $"PDF={string.Join(", ", values.Zip(_pdf))} CDF={string.Join(", ", values.Zip(_cdf))}";
     }
 }
