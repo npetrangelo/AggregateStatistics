@@ -25,6 +25,7 @@ public class PDF {
     }
 
     public double Percentile(double percent) {
+        // TODO CDF indices should be in center of probability boxes, not on edge
         var index = _cdf.Length / 2;
         while (true) {
             if (index >= _cdf.Length) return _max;
