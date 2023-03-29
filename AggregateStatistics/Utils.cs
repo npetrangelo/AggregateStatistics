@@ -1,6 +1,10 @@
 namespace AggregateStatistics;
 
-public static class MyExtentions {
+public static class Utils {
+    public static double Lerp(double a, double b, double n) {
+        return a*(n-1) + b*n;
+    }
+    
     public static double[] Normalize(this double[] v) {
         var sum = v.Sum();
         var normalized = new double[v.Length];

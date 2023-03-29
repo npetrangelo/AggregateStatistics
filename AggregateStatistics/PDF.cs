@@ -17,10 +17,6 @@ public class PDF {
         }
     }
 
-    private static double Lerp(double a, double b, double n) {
-        return a*(n-1) + b*n;
-    }
-
     /**
      * Finds sample by doing a binary search on the cdf
      */
@@ -31,7 +27,7 @@ public class PDF {
             if (index >= _cdf.Length) return _max;
             if (index <= 0) return _min;
             if (sample >= _cdf[index] && sample < _cdf[index + 1]) {
-                return Lerp(_min, _max, (double) index/_cdf.Length);
+                return Utils.Lerp(_min, _max, (double) index/_cdf.Length);
             }
             
             if (sample > _cdf[index + 1]) {
