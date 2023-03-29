@@ -2,18 +2,18 @@
 
 public class PDF {
     private readonly double _min, _max;
-    private readonly double[] _pdf, _integral;
+    private readonly double[] _pdf, _cdf;
 
     public PDF(double min, double max, double[] pdf) {
         _min = min;
         _max = max;
         _pdf = pdf;
-        _integral = new double[pdf.Length];
+        _cdf = new double[pdf.Length];
 
         var sum = 0.0;
         for (var i = 0; i < pdf.Length; i++) {
             sum += pdf[i];
-            _integral[i] = sum;
+            _cdf[i] = sum;
         }
     }
 
@@ -21,13 +21,24 @@ public class PDF {
         return a*(n-1) + b*n;
     }
 
+    /**
+     * Finds sample by doing a binary search on the cdf
+     */
     public double Sample() {
         var sample = new Random().NextDouble();
-        for (var i = 0; i < _integral.Length; i++) {
-            if (_integral[i] > sample) {
-                return Lerp(_min, _max, (double) i/_integral.Length);
+        var index = _cdf.Length / 2;
+        while (true) {
+            if (index >= _cdf.Length) return _max;
+            if (index <= 0) return _min;
+            if (sample >= _cdf[index] && sample < _cdf[index + 1]) {
+                return Lerp(_min, _max, (double) index/_cdf.Length);
+            }
+            
+            if (sample > _cdf[index + 1]) {
+                index += index / 2;
+            } else {
+                index /= 2;
             }
         }
-        return _max;
     }
 }
