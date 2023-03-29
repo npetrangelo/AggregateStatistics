@@ -17,16 +17,7 @@ public class PDF {
             integral[i] = sum;
         }
     }
-    
-    public static double Dot(double[] v1, double[] v2) {
-        var dot = 0.0;
-        for (var i = 0; i < Math.Min(v1.Length, v2.Length); i++) {
-            dot += v1[i] * v2[i];
-        }
 
-        return dot;
-    }
-    
     public static double[] Convolve(double[] f1, double[] f2) {
         var newF = new double[f1.Length + f2.Length - 1];
         for (var i = 0; i < newF.Length; i++) {

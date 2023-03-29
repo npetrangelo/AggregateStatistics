@@ -7,12 +7,6 @@ public class Tests {
     }
 
     [Test]
-    public void TestDot() {
-        double[] v1 = { 1, 1 };
-        Assert.AreEqual(2.0, PDF.Dot(v1, v1));
-    }
-
-    [Test]
     public void TestConvolve() {
         double[] pdf = { 1, 1 };
         double[] expected = { 1, 2, 1 };
