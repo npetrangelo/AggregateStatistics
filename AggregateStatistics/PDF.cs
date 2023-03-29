@@ -18,18 +18,6 @@ public class PDF {
         }
     }
     
-    public static double[] Convolve(double[] f1, double[] f2) {
-        var newF = new double[f1.Length + f2.Length - 1];
-        for (var i = 0; i < newF.Length; i++) {
-            newF[i] = 0.0;
-            for (var j = i - (f2.Length - 1); j <= i; j++) {
-                if (j < 0 || j >= f1.Length) continue;
-                newF[i] += f1[j] * f2[^(j+1)];
-            }
-        }
-        return newF;
-    }
-    
     public static double Dot(double[] v1, double[] v2) {
         var dot = 0.0;
         for (var i = 0; i < Math.Min(v1.Length, v2.Length); i++) {
@@ -37,5 +25,17 @@ public class PDF {
         }
 
         return dot;
+    }
+    
+    public static double[] Convolve(double[] f1, double[] f2) {
+        var newF = new double[f1.Length + f2.Length - 1];
+        for (var i = 0; i < newF.Length; i++) {
+            newF[i] = 0.0;
+            for (var j = i - (f2.Length - 1); j <= i; j++) {
+                if (j < 0 || j >= f1.Length) continue;
+                newF[i] += f1[j] * f2[i-j];
+            }
+        }
+        return newF;
     }
 }
