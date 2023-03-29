@@ -29,4 +29,13 @@ public class PDF {
         }
         return newF;
     }
+    
+    public static double Dot(double[] v1, double[] v2) {
+        var dot = 0.0;
+        for (var i = 0; i < Math.Min(v1.Length, v2.Length); i++) {
+            dot += v1[i] * v2[i];
+        }
+
+        return dot;
+    }
 }
