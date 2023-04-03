@@ -8,6 +8,10 @@ public static class Utils {
     public static double[] Normalize(this double[] v) {
         var sum = v.Sum();
         var normalized = new double[v.Length];
+        if (sum == 1.0) {
+            v.CopyTo(normalized, 0);
+            return normalized;
+        }
         Parallel.For(0, v.Length, i => {
             normalized[i] = v[i] / sum;
         });
