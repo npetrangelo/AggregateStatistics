@@ -35,4 +35,13 @@ public class Tests {
         Console.WriteLine((pmf + pmf).ToString());
         Assert.True(expected == pmf + pmf);
     }
+    
+    [Test]
+    public void TestSubtraction() {
+        var pmf = new PMF(1, 6, new []{ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 });
+        var expected = new PMF(-5, 5, new []{ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0 });
+        Console.WriteLine(expected.ToString());
+        Console.WriteLine((pmf + pmf).ToString());
+        Assert.True(expected == pmf - pmf);
+    }
 }
