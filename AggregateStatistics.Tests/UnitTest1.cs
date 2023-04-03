@@ -7,23 +7,23 @@ public class Tests {
     }
 
     [Test]
-    public void TestPercentile() {
-        var pdf = new PDF(1, 3, new []{ 1.0, 1.0, 1.0 });
-        Console.WriteLine(pdf.ToString());
-        Console.WriteLine(pdf.Percentile(0.5));
+    public void TestQuantile() {
+        var pmf = new PMF(1, 3, new []{ 1.0, 1.0, 1.0 });
+        Console.WriteLine(pmf.ToString());
+        Console.WriteLine(pmf.Quantile(0.5));
     }
 
     [Test]
     public void TestConvolve() {
-        double[] pdf = { 1, 1 };
+        double[] pmf = { 1, 1 };
         double[] expected = { 1, 2, 1 };
-        Assert.AreEqual(expected, pdf.Convolve(pdf));
+        Assert.AreEqual(expected, pmf.Convolve(pmf));
     }
     
     [Test]
     public void TestNonuniformConvolve() {
-        double[] pdf = { 1, 2 };
+        double[] pmf = { 1, 2 };
         double[] expected = { 1, 4, 4 };
-        Assert.AreEqual(expected, pdf.Convolve(pdf));
+        Assert.AreEqual(expected, pmf.Convolve(pmf));
     }
 }
