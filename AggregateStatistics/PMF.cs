@@ -1,14 +1,13 @@
 ﻿namespace AggregateStatistics;
 
 public class PMF {
-    private readonly double _min, _max, _dx;
+    private readonly double _min, _max;
     private readonly double[] _pmf, _cdf;
-    private readonly Random _random = new Random();
+    private readonly Random _random = new ();
 
     public PMF(double min, double max, double[] pmf) {
         _min = min;
         _max = max;
-        _dx = (max - min) / (pmf.Length - 1);
         
         _pmf = pmf.Normalize(); // All PDFs must sum to 1
         _cdf = new double[pmf.Length+1];
@@ -36,7 +35,6 @@ public class PMF {
      * Second quartile -> y=0.75
      */
     public double Quantile(double y) {
-        // TODO CDF indices should be in center of probability boxes, not on edge
         var index = _cdf.Length / 2;
         while (true) {
             if (index >= _cdf.Length) return _max;
