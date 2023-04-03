@@ -33,6 +33,6 @@ public class Tests {
         var expected = new PMF(2, 12, new []{ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0 });
         Console.WriteLine(expected.ToString());
         Console.WriteLine((pmf + pmf).ToString());
-        Assert.AreEqual(expected, pmf + pmf);
+        Assert.That(expected._pmf, Is.EqualTo((pmf + pmf)._pmf).Within(0.0000001d));
     }
 }

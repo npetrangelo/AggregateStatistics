@@ -2,7 +2,8 @@
 
 public class PMF {
     private readonly double _min, _max;
-    private readonly double[] _pmf, _cdf;
+    public double[] _pmf { get; private set; }
+    private readonly double[] _cdf;
     private readonly Random _random = new ();
 
     public PMF(double min, double max, double[] pmf) {
@@ -54,7 +55,7 @@ public class PMF {
     // public PDF DownSample(int scaleFactor) {
     //     // TODO Combine adjacent buckets together to avoid memory leaks
     // }
-
+    
     public static PMF operator +(PMF pmf) => pmf;
     public static PMF operator -(PMF pmf) => new (-pmf._min, -pmf._max, pmf._pmf);
     public static PMF operator +(PMF a, PMF b) => new (a._min+b._min, a._max+b._max, a._pmf.Convolve(b._pmf));
