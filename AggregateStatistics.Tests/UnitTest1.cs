@@ -8,9 +8,9 @@ public class Tests {
 
     [Test]
     public void TestQuantile() {
-        var pmf = new PMF(1, 3, new []{ 1.0, 1.0, 1.0 });
+        var pmf = new PMF(0, 2, new []{ 0.25, 0.5, 0.25 });
         Console.WriteLine(pmf.ToString());
-        Console.WriteLine(pmf.Quantile(0.5));
+        Assert.AreEqual(1, pmf.Quantile(0.5));
     }
 
     [Test]

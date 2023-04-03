@@ -3,6 +3,7 @@
 public class PMF {
     private readonly double _min, _max, _dx;
     private readonly double[] _pmf, _cdf;
+    private readonly Random _random = new Random();
 
     public PMF(double min, double max, double[] pmf) {
         _min = min;
@@ -21,21 +22,27 @@ public class PMF {
     }
 
     /**
-     * Finds sample by doing a binary search on the cdf
+     * Finds sample by passing a uniform random number between 0 and 1 to the quantile function
      */
     public double Sample() {
-        return Quantile(new Random().NextDouble());
+        return Quantile(_random.NextDouble());
     }
 
+    /**
+     * Finds the quantile by doing a binary search on the CDF.
+     * 
+     * First quartile -> y=0.25
+     * Median -> y=0.5
+     * Second quartile -> y=0.75
+     */
     public double Quantile(double y) {
         // TODO CDF indices should be in center of probability boxes, not on edge
         var index = _cdf.Length / 2;
         while (true) {
             if (index >= _cdf.Length) return _max;
             if (index <= 0) return _min;
-            if (y > _cdf[index - 1] && y <= _cdf[index]) {
-                Console.WriteLine($"index={index}");
-                return Utils.Lerp(_min, _max, (double) index/(_cdf.Length - 1));
+            if (_cdf[index - 1] < y && y <= _cdf[index]) {
+                return Utils.Lerp(_min, _max, (double) (index - 1)/(_pmf.Length - 1));
             }
             
             if (y > _cdf[index]) {
