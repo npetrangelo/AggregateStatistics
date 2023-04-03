@@ -29,4 +29,8 @@ public static class Utils {
         });
         return newF;
     }
+
+    public static bool Equals(this double a, double b, double tolerance) {
+        return Math.Abs(a - b) < tolerance;
+    }
 }

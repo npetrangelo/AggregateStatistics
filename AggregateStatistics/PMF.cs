@@ -56,6 +56,11 @@ public class PMF {
     //     // TODO Combine adjacent buckets together to avoid memory leaks
     // }
     
+    public static bool operator ==(PMF a, PMF b) => a._min.Equals(b._min, 0.00000001) &&
+                                                    a._max.Equals(b._max, 0.00000001) &&
+                                                    a._pmf.Length == b._pmf.Length &&
+                                                    a._pmf.SequenceEqual(b._pmf, new DoubleEquality());
+    public static bool operator !=(PMF a, PMF b) => !(a==b);
     public static PMF operator +(PMF pmf) => pmf;
     public static PMF operator -(PMF pmf) => new (-pmf._min, -pmf._max, pmf._pmf);
     public static PMF operator +(PMF a, PMF b) => new (a._min+b._min, a._max+b._max, a._pmf.Convolve(b._pmf));
@@ -79,5 +84,15 @@ public class PMF {
         }
         cdfValues[^1] = $"x≥{pmfValues[^1]}";
         return $"PMF={string.Join(", ", pmfValues.Zip(_pmf))}";
+    }
+
+    private class DoubleEquality : IEqualityComparer<double> {
+        public bool Equals(double a, double b) {
+            return a.Equals(b, 0.00000001);
+        }
+
+        public int GetHashCode(double d) {
+            return d.GetHashCode();
+        }
     }
 }
