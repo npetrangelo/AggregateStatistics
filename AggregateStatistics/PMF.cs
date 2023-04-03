@@ -55,12 +55,17 @@ public class PMF {
     //     // TODO Combine adjacent buckets together to avoid memory leaks
     // }
 
-    public PMF Sum(PMF that) {
-        return new PMF(_min + that._min, _max + that._max, _pmf.Convolve(that._pmf));
-    }
-
-    public PMF Average(PMF that) {
-        return new PMF((_min + that._min)/2, (_max + that._max)/2, _pmf.Convolve(that._pmf));
+    public static PMF operator +(PMF pmf) => pmf;
+    public static PMF operator -(PMF pmf) => new (-pmf._min, -pmf._max, pmf._pmf);
+    public static PMF operator +(PMF a, PMF b) => new (a._min+b._min, a._max+b._max, a._pmf.Convolve(b._pmf));
+    public static PMF operator -(PMF a, PMF b) => new (a._min-b._min, a._max-b._max, a._pmf.Convolve(b._pmf));
+    public static PMF operator +(PMF pmf, double s) => new (pmf._min + s, pmf._max + s, pmf._pmf);
+    public static PMF operator -(PMF pmf, double s) => pmf + -s;
+    public static PMF operator *(PMF pmf, double s) => new (pmf._min * s, pmf._max * s, pmf._pmf);
+    public static PMF operator /(PMF pmf, double s) => pmf * (1.0/s);
+    
+    public static PMF Average(PMF a, PMF b) {
+        return new PMF((a._min + b._min)/2, (a._max + b._max)/2, a._pmf.Convolve(b._pmf));
     }
 
     public new string ToString() {
@@ -68,10 +73,10 @@ public class PMF {
         var cdfValues = new string[_cdf.Length];
         for (var i = 0; i < pmfValues.Length; i++) {
             pmfValues[i] = Utils.Lerp(_min, _max, (double) i/(pmfValues.Length - 1));
-            var lower = i > 0 ? $"{pmfValues[i-1]} ≤ " : "";
-            cdfValues[i] = $"{lower}x < {pmfValues[i]}";
+            var lower = i > 0 ? $"{pmfValues[i-1]}≤" : "";
+            cdfValues[i] = $"{lower}x<{pmfValues[i]}";
         }
-        cdfValues[^1] = $"x ≥ {pmfValues[^1]}";
-        return $"PMF={string.Join(", ", pmfValues.Zip(_pmf))}\nCDF={string.Join(", ", cdfValues.Zip(_cdf))}";
+        cdfValues[^1] = $"x≥{pmfValues[^1]}";
+        return $"PMF={string.Join(", ", pmfValues.Zip(_pmf))}";
     }
 }
