@@ -59,13 +59,13 @@ public class PMF {
     public void DownSample(int scaleFactor) {
         // Down sampled pmf has extra slot for remainder, if there is one
         var newPmf = new double[_pmf.Length % scaleFactor == 0 ? _pmf.Length/scaleFactor : _pmf.Length/scaleFactor + 1];
-        for (var i = 0; i < newPmf.Length; i++) {
+        Parallel.For(0, newPmf.Length, i => {
             newPmf[i] = 0.0;
             for (var j = 0; j < scaleFactor; j++) {
-                if (i*scaleFactor + j >= _pmf.Length) break;
-                newPmf[i] += _pmf[i*scaleFactor + j];
+                if (i * scaleFactor + j >= _pmf.Length) break;
+                newPmf[i] += _pmf[i * scaleFactor + j];
             }
-        }
+        });
         _pmf = newPmf;
     }
     
@@ -90,11 +90,11 @@ public class PMF {
     public new string ToString() {
         var pmfValues = new double[_pmf.Length];
         var cdfValues = new string[_cdf.Length];
-        for (var i = 0; i < pmfValues.Length; i++) {
-            pmfValues[i] = Utils.Lerp(_min, _max, (double) i/(pmfValues.Length - 1));
-            var lower = i > 0 ? $"{pmfValues[i-1]}≤" : "";
+        Parallel.For(0, pmfValues.Length, i => {
+            pmfValues[i] = Utils.Lerp(_min, _max, (double)i / (pmfValues.Length - 1));
+            var lower = i > 0 ? $"{pmfValues[i - 1]}≤" : "";
             cdfValues[i] = $"{lower}x<{pmfValues[i]}";
-        }
+        });
         cdfValues[^1] = $"x≥{pmfValues[^1]}";
         return $"PMF={string.Join(", ", pmfValues.Zip(_pmf))}";
     }
