@@ -21,13 +21,16 @@ public class PMF {
             _cdf[i+1] = sum;
         }
     }
+    
+    /**
+     * Returns the value associated with the probability mass at index i
+     */
+    public double valueAt(double i) => Utils.Lerp(_min, _max, i / (_pmf.Length - 1));
 
     /**
      * Finds sample by passing a uniform random number between 0 and 1 to the quantile function
      */
-    public double Sample() {
-        return Quantile(_random.NextDouble());
-    }
+    public double Sample() => Quantile(_random.NextDouble());
 
     /**
      * Finds the quantile by doing a binary search on the CDF.
@@ -42,7 +45,7 @@ public class PMF {
             if (index >= _cdf.Length) return _max;
             if (index <= 0) return _min;
             if (_cdf[index - 1] < y && y <= _cdf[index]) {
-                return Utils.Lerp(_min, _max, (double) (index - 1)/(_pmf.Length - 1));
+                return valueAt(index - 1);
             }
             
             if (y > _cdf[index]) {
@@ -91,7 +94,7 @@ public class PMF {
         var pmfValues = new double[_pmf.Length];
         var cdfValues = new string[_cdf.Length];
         Parallel.For(0, pmfValues.Length, i => {
-            pmfValues[i] = Utils.Lerp(_min, _max, (double)i / (pmfValues.Length - 1));
+            pmfValues[i] = valueAt(i);
             var lower = i > 0 ? $"{pmfValues[i - 1]}≤" : "";
             cdfValues[i] = $"{lower}x<{pmfValues[i]}";
         });
