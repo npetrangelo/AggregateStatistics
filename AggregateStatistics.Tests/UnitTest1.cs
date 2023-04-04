@@ -28,6 +28,14 @@ public class Tests {
     }
     
     [Test]
+    public void TestDownSample() {
+        var pmf = new PMF(2, 12, new []{ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0 });
+        var expected = new PMF(2, 12, new []{ 3.0, 7.0, 11.0, 9.0, 5.0, 1.0 });
+        pmf.DownSample(2);
+        Assert.True(expected == pmf);
+    }
+    
+    [Test]
     public void TestAddition() {
         var pmf = new PMF(1, 6, new []{ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 });
         var expected = new PMF(2, 12, new []{ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0 });

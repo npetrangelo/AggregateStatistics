@@ -5,6 +5,7 @@ public class PMF {
     public double[] _pmf { get; private set; }
     private readonly double[] _cdf;
     private readonly Random _random = new ();
+    private const double Tolerance = 0.00000001;
 
     public PMF(double min, double max, double[] pmf) {
         _min = min;
@@ -52,12 +53,24 @@ public class PMF {
         }
     }
 
-    // public PDF DownSample(int scaleFactor) {
-    //     // TODO Combine adjacent buckets together to avoid memory leaks
-    // }
+    /**
+     * Combines probability buckets to save memory
+     */
+    public void DownSample(int scaleFactor) {
+        // Down sampled pmf has extra slot for remainder, if there is one
+        var newPmf = new double[_pmf.Length % scaleFactor == 0 ? _pmf.Length/scaleFactor : _pmf.Length/scaleFactor + 1];
+        for (var i = 0; i < newPmf.Length; i++) {
+            newPmf[i] = 0.0;
+            for (var j = 0; j < scaleFactor; j++) {
+                if (i*scaleFactor + j >= _pmf.Length) break;
+                newPmf[i] += _pmf[i*scaleFactor + j];
+            }
+        }
+        _pmf = newPmf;
+    }
     
-    public static bool operator ==(PMF a, PMF b) => a._min.Equals(b._min, 0.00000001) &&
-                                                    a._max.Equals(b._max, 0.00000001) &&
+    public static bool operator ==(PMF a, PMF b) => a._min.Equals(b._min, Tolerance) &&
+                                                    a._max.Equals(b._max, Tolerance) &&
                                                     a._pmf.Length == b._pmf.Length &&
                                                     a._pmf.SequenceEqual(b._pmf, new DoubleEquality());
     public static bool operator !=(PMF a, PMF b) => !(a==b);
@@ -88,7 +101,7 @@ public class PMF {
 
     private class DoubleEquality : IEqualityComparer<double> {
         public bool Equals(double a, double b) {
-            return a.Equals(b, 0.00000001);
+            return a.Equals(b, Tolerance);
         }
 
         public int GetHashCode(double d) {
