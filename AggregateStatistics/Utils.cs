@@ -12,6 +12,7 @@ public static class Utils {
             v.CopyTo(normalized, 0);
             return normalized;
         }
+        if (sum == 0.0) throw new DivideByZeroException();
         Parallel.For(0, v.Length, i => {
             normalized[i] = v[i] / sum;
         });
