@@ -62,9 +62,9 @@ public class PMF {
                                                     a._pmf.SequenceEqual(b._pmf, new DoubleEquality());
     public static bool operator !=(PMF a, PMF b) => !(a==b);
     public static PMF operator +(PMF pmf) => pmf;
-    public static PMF operator -(PMF pmf) => new (-pmf._min, -pmf._max, pmf._pmf);
+    public static PMF operator -(PMF pmf) => new (-pmf._max, -pmf._min, pmf._pmf.Reverse().ToArray());
     public static PMF operator +(PMF a, PMF b) => new (a._min+b._min, a._max+b._max, a._pmf.Convolve(b._pmf));
-    public static PMF operator -(PMF a, PMF b) => new (a._min-b._max, a._max-b._min, a._pmf.Convolve(b._pmf.Reverse().ToArray()));
+    public static PMF operator -(PMF a, PMF b) => a + -b;
     public static PMF operator +(PMF pmf, double s) => new (pmf._min + s, pmf._max + s, pmf._pmf);
     public static PMF operator -(PMF pmf, double s) => pmf + -s;
     public static PMF operator *(PMF pmf, double s) => new (pmf._min * s, pmf._max * s, pmf._pmf);
