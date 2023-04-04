@@ -89,6 +89,14 @@ public class PMF {
     public static PMF Average(PMF a, PMF b) {
         return new PMF((a._min + b._min)/2, (a._max + b._max)/2, a._pmf.Convolve(b._pmf));
     }
+    
+    public double Mean() {
+        var sum = 0.0;
+        for (var i = 0; i < _pmf.Length; i++) {
+            sum += _pmf[i] * valueAt(i);
+        }
+        return sum;
+    }
 
     public new string ToString() {
         var pmfValues = new double[_pmf.Length];

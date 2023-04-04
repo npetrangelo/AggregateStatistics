@@ -48,4 +48,10 @@ public class Tests {
         var expected = new PMF(-5, 5, new []{ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0 });
         Assert.True(expected == pmf - pmf);
     }
+    
+    [Test]
+    public void TestMean() {
+        var pmf = new PMF(1, 6, new []{ 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 });
+        Assert.AreEqual(3.5, pmf.Mean());
+    }
 }
