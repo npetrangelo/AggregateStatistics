@@ -5,6 +5,10 @@ public static class Utils {
         return a*(1-n) + b*n;
     }
     
+    public static Fraction Lerp(Fraction a, Fraction b, Fraction n) {
+        return a*(1-n) + b*n;
+    }
+    
     public static double[] Normalize(this double[] v) {
         var sum = v.Sum();
         var normalized = new double[v.Length];

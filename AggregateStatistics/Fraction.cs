@@ -1,6 +1,6 @@
 namespace AggregateStatistics;
 
-public struct Fraction {
+public struct Fraction : IComparable<Fraction> {
     private readonly int _n, _d;
 
     public Fraction(int numerator, int denominator = 1) {
@@ -22,4 +22,18 @@ public struct Fraction {
     public static Fraction operator -(Fraction a, Fraction b) => a + -b;
     public static Fraction operator *(Fraction a, Fraction b) => new (a._n*b._n, a._d*b._d);
     public static Fraction operator /(Fraction a, Fraction b) => new (a._n*b._d, a._d*b._n);
+
+    public int CompareTo(Fraction that) => ((double) this).CompareTo((double) that);
+
+    public override string ToString() => _d == 1 ? $"{_n}" : $"{_n}/{_d}";
+
+    public class Equality : IEqualityComparer<Fraction> {
+        public bool Equals(Fraction a, Fraction b) {
+            return a == b;
+        }
+
+        public int GetHashCode(Fraction d) {
+            return d.GetHashCode();
+        }
+    }
 }
