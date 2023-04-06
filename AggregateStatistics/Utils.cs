@@ -34,12 +34,12 @@ public static class Utils {
         return a;
     }
     
-    public static double[] Convolve(this IEnumerable<double> e1, IEnumerable<double> e2) {
+    public static Fraction[] Convolve(this IEnumerable<Fraction> e1, IEnumerable<Fraction> e2) {
         var f1 = e1.ToArray();
         var f2 = e2.ToArray();
-        var newF = new double[f1.Length + f2.Length - 1];
+        var newF = new Fraction[f1.Length + f2.Length - 1];
         Parallel.For(0, newF.Length, i => {
-            newF[i] = 0.0;
+            newF[i] = 0;
             for (var j = i - (f2.Length - 1); j <= i; j++) {
                 if (j < 0 || j >= f1.Length) continue;
                 newF[i] += f1[j] * f2[i-j];

@@ -25,15 +25,15 @@ public class UtilsTest {
 
     [Test]
     public void TestConvolve() {
-        double[] pmf = { 1, 1 };
-        double[] expected = { 1, 2, 1 };
+        Fraction[] pmf = { 1, 1 };
+        Fraction[] expected = { 1, 2, 1 };
         Assert.AreEqual(expected, pmf.Convolve(pmf));
     }
     
     [Test]
     public void TestNonuniformConvolve() {
-        double[] pmf = { 1, 2 };
-        double[] expected = { 1, 4, 4 };
+        Fraction[] pmf = { 1, 2 };
+        Fraction[] expected = { 1, 4, 4 };
         Assert.AreEqual(expected, pmf.Convolve(pmf));
     }
 }
