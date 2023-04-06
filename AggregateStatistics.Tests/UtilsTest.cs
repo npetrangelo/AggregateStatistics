@@ -13,15 +13,9 @@ public class UtilsTest {
 
     [Test]
     public void TestNormalize() {
-        double[] arr = { 1, 2, 1 };
-        double[] expected = { 0.25, 0.5, 0.25 };
+        Fraction[] arr = { 1, 2, 1 };
+        Fraction[] expected = { new (1,4), new (1,2), new (1,4) };
         Assert.AreEqual(expected, arr.Normalize());
-    }
-
-    [Test]
-    public void TestDoubleEquals() {
-        Assert.True(6.0.Equals(5.9999999999, 0.00001));
-        Assert.False(6.0.Equals(5.999, 0.00000001));
     }
 
     [Test]

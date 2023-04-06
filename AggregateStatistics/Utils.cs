@@ -8,23 +8,21 @@ public static class Utils {
     public static Fraction Lerp(Fraction a, Fraction b, Fraction n) {
         return a*(1-n) + b*n;
     }
+
+    public static Fraction Sum(this IEnumerable<Fraction> v) => v.Aggregate((a, b) => a + b);
     
-    public static double[] Normalize(this double[] v) {
+    public static Fraction[] Normalize(this Fraction[] v) {
         var sum = v.Sum();
-        var normalized = new double[v.Length];
-        if (sum == 1.0) {
+        var normalized = new Fraction[v.Length];
+        if (sum == 1) {
             v.CopyTo(normalized, 0);
             return normalized;
         }
-        if (sum == 0.0) throw new DivideByZeroException();
+        if (sum == 0) throw new DivideByZeroException();
         Parallel.For(0, v.Length, i => {
             normalized[i] = v[i] / sum;
         });
         return normalized;
-    }
-    
-    public static bool Equals(this double a, double b, double tolerance) {
-        return Math.Abs(a - b) < tolerance;
     }
 
     public static int GCD(int a, int b) {

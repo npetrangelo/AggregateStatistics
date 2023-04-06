@@ -11,7 +11,7 @@ public struct Fraction : IComparable<Fraction> {
         _d /= gcd;
     }
     
-    public static explicit operator double(Fraction f) => (double) f._n / f._d;
+    public static implicit operator double(Fraction f) => (double) f._n / f._d;
     public static implicit operator Fraction(int n) => new (n);
 
     public static bool operator ==(Fraction a, Fraction b) => a._n == b._n && a._d == b._d;
@@ -27,8 +27,7 @@ public struct Fraction : IComparable<Fraction> {
     public static bool operator <(Fraction a, Fraction b) => a._n * b._d < b._n * a._d;
     public static bool operator >=(Fraction a, Fraction b) => !(a < b);
     public static bool operator <=(Fraction a, Fraction b) => !(a > b);
-
-
+    
     public int CompareTo(Fraction that) => ((double) this).CompareTo((double) that);
 
     public override string ToString() => _d == 1 ? $"{_n}" : $"{_n}/{_d}";
