@@ -22,6 +22,12 @@ public struct Fraction : IComparable<Fraction> {
     public static Fraction operator -(Fraction a, Fraction b) => a + -b;
     public static Fraction operator *(Fraction a, Fraction b) => new (a._n*b._n, a._d*b._d);
     public static Fraction operator /(Fraction a, Fraction b) => new (a._n*b._d, a._d*b._n);
+    
+    public static bool operator >(Fraction a, Fraction b) => a._n * b._d > b._n * a._d;
+    public static bool operator <(Fraction a, Fraction b) => a._n * b._d < b._n * a._d;
+    public static bool operator >=(Fraction a, Fraction b) => !(a < b);
+    public static bool operator <=(Fraction a, Fraction b) => !(a > b);
+
 
     public int CompareTo(Fraction that) => ((double) this).CompareTo((double) that);
 

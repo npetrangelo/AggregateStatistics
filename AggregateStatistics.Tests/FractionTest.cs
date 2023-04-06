@@ -46,4 +46,10 @@ public class FractionTest {
         var qotient = new Fraction(2, 3) / 2;
         Assert.AreEqual(new Fraction(1, 3), qotient);
     }
+
+    [Test]
+    public void TestComparisons() {
+        Assert.True(new Fraction(1, 2) < 1);
+        Assert.True(new Fraction(3, 2) > 1);
+    }
 }

@@ -1,7 +1,7 @@
 namespace AggregateStatistics.Tests;
 
 using AggregateStatistics;
-public class Tests {
+public class ProbDistTests {
     [SetUp]
     public void Setup() {
     }
