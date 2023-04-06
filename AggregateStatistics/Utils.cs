@@ -19,7 +19,22 @@ public static class Utils {
         return normalized;
     }
     
-    public static double[] Convolve(this double[] f1, double[] f2) {
+    public static bool Equals(this double a, double b, double tolerance) {
+        return Math.Abs(a - b) < tolerance;
+    }
+
+    public static int GCD(int a, int b) {
+        while (b != 0) {
+            var t = b;
+            b = a % b;
+            a = t;
+        }
+        return a;
+    }
+    
+    public static double[] Convolve(this IEnumerable<double> e1, IEnumerable<double> e2) {
+        var f1 = e1.ToArray();
+        var f2 = e2.ToArray();
         var newF = new double[f1.Length + f2.Length - 1];
         Parallel.For(0, newF.Length, i => {
             newF[i] = 0.0;
@@ -29,9 +44,5 @@ public static class Utils {
             }
         });
         return newF;
-    }
-
-    public static bool Equals(this double a, double b, double tolerance) {
-        return Math.Abs(a - b) < tolerance;
     }
 }
