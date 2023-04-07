@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
 
 namespace AggregateStatistics;
@@ -15,27 +16,21 @@ public class ProbDist {
     }
     
     private ProbDist(IEnumerable<(Fraction, Fraction)> pmf) {
-        _pmf = new SortedDictionary<Fraction, Fraction>();
-        foreach (var data in pmf) {
-            if (_pmf.ContainsKey(data.Item1)) {
-                _pmf[data.Item1] += data.Item2;
+        var dict = new ConcurrentDictionary<Fraction, Fraction>();
+        Parallel.ForEach(pmf, data => {
+            if (dict.ContainsKey(data.Item1)) {
+                dict[data.Item1] += data.Item2;
             } else {
-                _pmf[data.Item1] = data.Item2;
+                dict[data.Item1] = data.Item2;
             }
-        }
+        });
+        _pmf = new SortedDictionary<Fraction, Fraction>(dict);
         _cdf = new Fraction[_pmf.Count];
         RecalculateCDF();
     }
     
-    public ProbDist(IEnumerable<Fraction> possibilities, IEnumerable<Fraction> probabilities) {
-        var normalized = probabilities.ToArray().Normalize();
-        _pmf = new SortedDictionary<Fraction, Fraction>();
-        foreach (var data in possibilities.Zip(normalized)) {
-            _pmf[data.Item1] = data.Item2;
-        }
-        _cdf = new Fraction[_pmf.Count];
-        RecalculateCDF();
-    }
+    public ProbDist(IEnumerable<Fraction> possibilities, IEnumerable<Fraction> probabilities) :
+        this(possibilities.Zip(probabilities.ToArray().Normalize())) { }
 
     public ProbDist(Fraction min, Fraction max, Fraction[] pmf) {
         var normalized = pmf.Normalize();
