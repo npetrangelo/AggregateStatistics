@@ -1,6 +1,12 @@
 namespace AggregateStatistics;
 
 public static class Utils {
+    public static int Pow(this int a, int b) {
+        for (var i = 1; i < b; i++) {
+            a *= a;
+        }
+        return a;
+    }
     public static double Lerp(double a, double b, double n) {
         return a*(1-n) + b*n;
     }

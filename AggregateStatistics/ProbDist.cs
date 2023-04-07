@@ -17,6 +17,20 @@ public class ProbDist {
     private ProbDist(IEnumerable<(Fraction, Fraction)> pmf) {
         _pmf = new SortedDictionary<Fraction, Fraction>();
         foreach (var data in pmf) {
+            if (_pmf.ContainsKey(data.Item1)) {
+                _pmf[data.Item1] += data.Item2;
+            } else {
+                _pmf[data.Item1] = data.Item2;
+            }
+        }
+        _cdf = new Fraction[_pmf.Count];
+        RecalculateCDF();
+    }
+    
+    public ProbDist(IEnumerable<Fraction> possibilities, IEnumerable<Fraction> probabilities) {
+        var normalized = probabilities.ToArray().Normalize();
+        _pmf = new SortedDictionary<Fraction, Fraction>();
+        foreach (var data in possibilities.Zip(normalized)) {
             _pmf[data.Item1] = data.Item2;
         }
         _cdf = new Fraction[_pmf.Count];
@@ -72,6 +86,11 @@ public class ProbDist {
     }
     
     /**
+     * Finds sample by passing a uniform random number between 0 and 1 to the quantile function
+     */
+    public Fraction Sample() => Quantile(_random.NextDouble());
+    
+    /**
      * Combines probability buckets to save memory
      */
     public void DownSample(int scaleFactor) {
@@ -93,27 +112,45 @@ public class ProbDist {
         _pmf = newData;
         RecalculateCDF();
     }
-    
+
     /**
-     * Finds sample by passing a uniform random number between 0 and 1 to the quantile function
+     * Calculates the expected value of probability distribution d.
+     * Written this way to resemble the mathematical notation E[x].
      */
-    public Fraction Sample() => Quantile(_random.NextDouble());
-    
+    public static Fraction E(ProbDist d) {
+        Fraction mean = 0;
+        foreach (var pair in d._pmf) {
+            mean += pair.Key * pair.Value;
+        }
+        return mean;
+    }
+
+    /**
+     * Calculates the variance of probability distribution d.
+     */
+    public static Fraction Var(ProbDist d) {
+        var m = d - E(d);
+        return E(m^2);
+    }
+
     public static bool operator ==(ProbDist a, ProbDist b) => a._pmf.Count == b._pmf.Count && 
-                                                                      a._pmf.Keys.SequenceEqual(b._pmf.Keys, new Fraction.Equality()) &&
-                                                                      a._pmf.Values.SequenceEqual(b._pmf.Values, new Fraction.Equality()) &&
-                                                                      a._cdf.SequenceEqual(b._cdf, new Fraction.Equality());
+                                                              a._pmf.Keys.SequenceEqual(b._pmf.Keys, new Fraction.Equality()) &&
+                                                              a._pmf.Values.SequenceEqual(b._pmf.Values, new Fraction.Equality()) &&
+                                                              a._cdf.SequenceEqual(b._cdf, new Fraction.Equality());
     public static bool operator !=(ProbDist a, ProbDist b) => !(a==b);
     public static ProbDist operator +(ProbDist d) => d;
     public static ProbDist operator -(ProbDist d) => new (d._pmf.Select(p => (-p.Key, p.Value)));
     public static ProbDist operator +(ProbDist a, ProbDist b) => Operate(a, b, (d, d1) => d+d1);
     public static ProbDist operator -(ProbDist a, ProbDist b) => a + -b;
+    public static ProbDist operator *(ProbDist a, ProbDist b) => Operate(a, b, (d, d1) => d*d1);
+    public static ProbDist operator /(ProbDist a, ProbDist b) => Operate(a, b, (d, d1) => d/d1);
     public static ProbDist operator +(ProbDist d, Fraction s) => new (d._pmf.Select(p => (p.Key+s, p.Value)));
     public static ProbDist operator -(ProbDist d, Fraction s) => d + -s;
     public static ProbDist operator *(ProbDist d, Fraction s) => new (d._pmf.Select(p => (p.Key*s, p.Value)));
     public static ProbDist operator /(ProbDist d, Fraction s) => d * (1/s);
+    public static ProbDist operator ^(ProbDist d, int pow) => new (d._pmf.Select(p => (p.Key^pow, p.Value)));
 
-    public static ProbDist Operate(ProbDist a, ProbDist b, Func<Fraction, Fraction, Fraction> f) {
+    private static ProbDist Operate(ProbDist a, ProbDist b, Func<Fraction, Fraction, Fraction> f) {
         var pmf = new SortedDictionary<Fraction, Fraction>();
         foreach (var entryA in a._pmf) {
             foreach (var entryB in b._pmf) {
@@ -126,14 +163,6 @@ public class ProbDist {
             }
         }
         return new ProbDist(pmf);
-    }
-    
-    public double Mean() {
-        var sum = 0.0;
-        foreach (var pair in _pmf) {
-            sum += (double) pair.Key * pair.Value;
-        }
-        return sum;
     }
 
     public void printPMF() {
