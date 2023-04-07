@@ -30,7 +30,7 @@ public class ProbDist {
     }
     
     public ProbDist(IEnumerable<Fraction> possibilities, IEnumerable<Fraction> probabilities) :
-        this(possibilities.Zip(probabilities.ToArray().Normalize())) { }
+        this(possibilities.Zip(probabilities.Normalize())) { }
 
     public ProbDist(Fraction min, Fraction max, Fraction[] pmf) {
         var normalized = pmf.Normalize();

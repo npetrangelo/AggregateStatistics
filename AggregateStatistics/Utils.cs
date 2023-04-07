@@ -17,7 +17,8 @@ public static class Utils {
 
     public static Fraction Sum(this IEnumerable<Fraction> v) => v.Aggregate((a, b) => a + b);
     
-    public static Fraction[] Normalize(this Fraction[] v) {
+    public static Fraction[] Normalize(this IEnumerable<Fraction> enumerable) {
+        var v = enumerable.ToArray();
         var sum = v.Sum();
         var normalized = new Fraction[v.Length];
         if (sum == 1) {
