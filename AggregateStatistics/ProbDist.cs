@@ -128,10 +128,7 @@ public class ProbDist {
     /**
      * Calculates the variance of probability distribution d.
      */
-    public static Fraction Var(ProbDist d) {
-        var m = d - E(d);
-        return E(m^2);
-    }
+    public static Fraction Var(ProbDist d) => E(d^2) - (E(d)^2);
 
     public static bool operator ==(ProbDist a, ProbDist b) => a._pmf.Count == b._pmf.Count && 
                                                               a._pmf.Keys.SequenceEqual(b._pmf.Keys, new Fraction.Equality()) &&
