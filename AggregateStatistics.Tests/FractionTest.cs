@@ -48,6 +48,14 @@ public class FractionTest {
     }
 
     [Test]
+    public void TestModulus() {
+        var a = (Fraction) 1/7;
+        var b = (Fraction) 1/2;
+        Assert.AreEqual(a, a % b);
+        Assert.AreEqual(a/2, 4*a % b);
+    }
+
+    [Test]
     public void TestComparisons() {
         Assert.True(new Fraction(1, 2) < 1);
         Assert.True(new Fraction(3, 2) > 1);
